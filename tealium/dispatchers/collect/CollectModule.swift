@@ -26,7 +26,7 @@ public class CollectModule: Dispatcher {
     public required init(config: TealiumConfig,
                          delegate: ModuleDelegate,
                          completion: ModuleCompletion?) {
-
+        print("hello")
         self.config = config
         self.delegate = delegate
         collect = CollectEventDispatcher(config: config, completion: nil)

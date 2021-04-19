@@ -37,6 +37,7 @@ public class VisitorServiceRetriever {
     init(config: TealiumConfig,
          visitorId: String,
          urlSession: URLSessionProtocol = getURLSession()) {
+        print("hello")
         tealiumConfig = config
         self.urlSession = urlSession
         self.tealiumVisitorId = visitorId

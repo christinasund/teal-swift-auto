@@ -8,7 +8,7 @@
 import Foundation
 
 class ConsentManagerModule: Collector, DispatchValidator {
-
+    
     public let id: String = ModuleNames.consentmanager
     var config: TealiumConfig
     var consentManager: ConsentManager?
@@ -17,6 +17,7 @@ class ConsentManagerModule: Collector, DispatchValidator {
     var diskStorage: TealiumDiskStorageProtocol!
 
     var data: [String: Any]? {
+        print("hello")
         consentManager?.currentPolicy.consentPolicyStatusInfo
     }
 

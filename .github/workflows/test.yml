@@ -1,6 +1,6 @@
 name: Tests and Code Coverage
 
-on: [push] #[pull_request]
+on: [push] # [pull_request]
 
 jobs:
   install:
@@ -26,39 +26,34 @@ jobs:
       matrix:
         destination: ["platform=iOS Simulator,OS=14.4,name=iPhone 12"]
         scheme:
-            - TealiumAttributionTests-iOS
-            - TealiumAutotrackingTests-iOS 
+            # - TealiumAttributionTests-iOS
+            # - TealiumAutotrackingTests-iOS 
             - TealiumCollectTests-iOS
-            - TealiumCoreTests-iOS
-            - TealiumLifecycleTests-iOS
-            - TealiumLocationTests-iOS
-            - TealiumMediaTests-iOS
-            - TealiumRemoteCommandsTests-iOS
-            - TealiumTagManagementTests-iOS
-            - TealiumVisitorServiceTests-iOS
+            # - TealiumCoreTests-iOS
+            # - TealiumLifecycleTests-iOS
+            # - TealiumLocationTests-iOS
+            # - TealiumMediaTests-iOS
+            # - TealiumRemoteCommandsTests-iOS
+            # - TealiumTagManagementTests-iOS
+            # - TealiumVisitorServiceTests-iOS
     steps:
       - uses: actions/checkout@v2 
       - name: Test - "${{ matrix.scheme }}"
         uses: paambaati/codeclimate-action@v2.7.5
-        env:
-          CC_TEST_REPORTER_ID: ${{secrets.CC_TEST_REPORTER_ID}}
-        with:
-          coverageCommand: cd builder && fastlane scan --scheme "${{ matrix.scheme }}" --output_files "${{ matrix.scheme }}".html
-          coverageLocations: ${{env.working-directory}}/test_output/"${{ matrix.scheme }}".html:html
-        #run: fastlane scan --scheme "${{ matrix.scheme }}" --output_files "${{ matrix.scheme }}".html
-        #working-directory: ${{env.working-directory}} 
+        run: fastlane scan --scheme "${{ matrix.scheme }}" --output_files "${{ matrix.scheme }}".html
+        working-directory: ${{env.working-directory}} 
       - name: Archive Code Coverage Report
         uses: actions/upload-artifact@v2
         with:
           name: code-coverage-report
           path: ${{env.working-directory}}/test_output/"${{ matrix.scheme }}".html
-      # - name: Upload Coverage to Code Climate
-      #   uses: paambaati/codeclimate-action@v2.7.5
-      #   env:
-      #     CC_TEST_REPORTER_ID: ${{secrets.CC_TEST_REPORTER_ID}}
-      #   with:
-      #     coverageCommand: mvn test
-      #     coverageLocations: ${{github.workspace}}/target/site/jacoco/jacoco.xml:jacoco
+      - name: Upload Coverage to Code Climate
+        uses: paambaati/codeclimate-action@v2.7.5
+        env:
+          CC_TEST_REPORTER_ID: ${{secrets.CC_TEST_REPORTER_ID}}
+        with:
+          coverageCommand: yarn test
+          coverageLocations: ${{env.working-directory}}/test_output/"${{ matrix.scheme }}".html:html
 
 
       ### The following will upload the code coverage reports to Codecov.io if we can get approval for it ###
@@ -82,33 +77,33 @@ jobs:
       # - name: Validate Code Coverage - "${{ matrix.scheme }}"
       #   run: python3 coverage.py "${{ matrix.scheme }}".txt && exit $(echo $?)
       #   working-directory: ${{env.working-directory}}
-  test_macOS:
-    needs: install
-    name: macOS Tests
-    runs-on: macos-latest
-    timeout-minutes: 60
-    env:
-      DEVELOPER_DIR: /Applications/Xcode.app/Contents/Developer
-      working-directory: ./builder
-    strategy:
-      matrix:
-        destination: ["platform=macOS,arch=x86_64"]
-        scheme:
-          - TealiumCoreTests-macOS
-          - TealiumCollectTests-macOS
-          - TealiumLifecycleTests-macOS
-          - TealiumMediaTests-macOS
-          - TealiumVisitorServiceTests-macOS
-    steps:
-      - uses: actions/checkout@v2
-      - name: Test - "${{ matrix.scheme }}"
-        run: rm -rf output && fastlane scan --scheme "${{ matrix.scheme }}" --derived_data_path ./output --code_coverage true --skip_build true
-        working-directory: ${{env.working-directory}}
-      - name: Archive Code Coverage Report
-        uses: actions/upload-artifact@v2
-        with:
-          name: code-coverage-report
-          path: ${{env.working-directory}}/test_output/"${{ matrix.scheme }}".html
+  # test_macOS:
+  #   needs: install
+  #   name: macOS Tests
+  #   runs-on: macos-latest
+  #   timeout-minutes: 60
+  #   env:
+  #     DEVELOPER_DIR: /Applications/Xcode.app/Contents/Developer
+  #     working-directory: ./builder
+  #   strategy:
+  #     matrix:
+  #       destination: ["platform=macOS,arch=x86_64"]
+  #       scheme:
+  #         - TealiumCoreTests-macOS
+  #         - TealiumCollectTests-macOS
+  #         - TealiumLifecycleTests-macOS
+  #         - TealiumMediaTests-macOS
+  #         - TealiumVisitorServiceTests-macOS
+  #   steps:
+  #     - uses: actions/checkout@v2
+  #     - name: Test - "${{ matrix.scheme }}"
+  #       run: rm -rf output && fastlane scan --scheme "${{ matrix.scheme }}" --derived_data_path ./output --code_coverage true --skip_build true
+  #       working-directory: ${{env.working-directory}}
+  #     - name: Archive Code Coverage Report
+  #       uses: actions/upload-artifact@v2
+  #       with:
+  #         name: code-coverage-report
+  #         path: ${{env.working-directory}}/test_output/"${{ matrix.scheme }}".html
 
       ### The following will upload the code coverage reports to Codecov.io if we can get approval for it ###
 
@@ -129,33 +124,33 @@ jobs:
       # - name: Validate Code Coverage - "${{ matrix.scheme }}"
       #   run: python3 coverage.py "${{ matrix.scheme }}".txt && exit $(echo $?)
       #   working-directory: ${{env.working-directory}}
-  test_tvOS:
-    needs: install
-    name: tvOS Tests
-    runs-on: macos-latest
-    timeout-minutes: 60
-    env:
-      DEVELOPER_DIR: /Applications/Xcode.app/Contents/Developer
-      working-directory: ./builder
-    strategy:
-      matrix:
-        destination: ["platform=tvOS Simulator,name=Apple TV"]
-        scheme:
-          - TealiumCoreTests-tvOS
-          - TealiumCollectTests-tvOS
-          - TealiumLifecycleTests-tvOS
-          - TealiumMediaTests-tvOS
-          - TealiumVisitorServiceTests-tvOS
-    steps:
-      - uses: actions/checkout@v2
-      - name: Test - "${{ matrix.scheme }}"
-        run: rm -rf output && fastlane scan --scheme "${{ matrix.scheme }}" --derived_data_path ./output --code_coverage true --skip_build true
-        working-directory: ${{env.working-directory}}
-      - name: Archive Code Coverage Report
-        uses: actions/upload-artifact@v2
-        with:
-          name: code-coverage-report
-          path: ${{env.working-directory}}/test_output/"${{ matrix.scheme }}".html
+  # test_tvOS:
+  #   needs: install
+  #   name: tvOS Tests
+  #   runs-on: macos-latest
+  #   timeout-minutes: 60
+  #   env:
+  #     DEVELOPER_DIR: /Applications/Xcode.app/Contents/Developer
+  #     working-directory: ./builder
+  #   strategy:
+  #     matrix:
+  #       destination: ["platform=tvOS Simulator,name=Apple TV"]
+  #       scheme:
+  #         - TealiumCoreTests-tvOS
+  #         - TealiumCollectTests-tvOS
+  #         - TealiumLifecycleTests-tvOS
+  #         - TealiumMediaTests-tvOS
+  #         - TealiumVisitorServiceTests-tvOS
+  #   steps:
+  #     - uses: actions/checkout@v2
+  #     - name: Test - "${{ matrix.scheme }}"
+  #       run: rm -rf output && fastlane scan --scheme "${{ matrix.scheme }}" --derived_data_path ./output --code_coverage true --skip_build true
+  #       working-directory: ${{env.working-directory}}
+  #     - name: Archive Code Coverage Report
+  #       uses: actions/upload-artifact@v2
+  #       with:
+  #         name: code-coverage-report
+  #         path: ${{env.working-directory}}/test_output/"${{ matrix.scheme }}".html
 
       ### The following will upload the code coverage reports to Codecov.io if we can get approval for it ###
 
@@ -176,15 +171,15 @@ jobs:
       # - name: Validate Code Coverage - "${{ matrix.scheme }}"
       #   run: python3 coverage.py "${{ matrix.scheme }}".txt && exit $(echo $?)
       #   working-directory: ${{env.working-directory}}
-  test_VisitorServiceDemo_uiTests:
-    name: Test TealiumVisitorProfileDemo UI Tests
-    runs-on: macos-latest
-    timeout-minutes: 60
-    env:
-      DEVELOPER_DIR: /Applications/Xcode.app/Contents/Developer
-      working-directory: ./samples/VisitorServiceDemo
-    steps:
-      - uses: actions/checkout@v2
-      - name: Test TealiumVisitorProfileDemo UI Tests iOS
-        run: rm -rf output && pod install && fastlane scan --scheme "TealiumVisitorProfileDemoUITests" --derived_data_path ./output --code_coverage false
-        working-directory: ${{ env.working-directory }}
+  # test_VisitorServiceDemo_uiTests:
+  #   name: Test TealiumVisitorProfileDemo UI Tests
+  #   runs-on: macos-latest
+  #   timeout-minutes: 60
+  #   env:
+  #     DEVELOPER_DIR: /Applications/Xcode.app/Contents/Developer
+  #     working-directory: ./samples/VisitorServiceDemo
+  #   steps:
+  #     - uses: actions/checkout@v2
+  #     - name: Test TealiumVisitorProfileDemo UI Tests iOS
+  #       run: rm -rf output && pod install && fastlane scan --scheme "TealiumVisitorProfileDemoUITests" --derived_data_path ./output --code_coverage false
+  #       working-directory: ${{ env.working-directory }}

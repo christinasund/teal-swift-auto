@@ -39,8 +39,9 @@ jobs:
     steps:
       - uses: actions/checkout@v2 
       - name: Test - "${{ matrix.scheme }}"
-        #uses: paambaati/codeclimate-action@v2.7.5
-      #   run: fastlane scan --scheme "${{ matrix.scheme }}" --output_files "${{ matrix.scheme }}".html
+        run: fastlane scan --scheme "${{ matrix.scheme }}" --clean true --code_coverage true
+      # - name: Prepare Code Coverage Report - "${{ matrix.scheme }}"
+      #   run: fastlane slather --scheme "${{ matrix.scheme }}" --cobertura_xml true 
       #   working-directory: ${{env.working-directory}} 
       # - name: Archive Code Coverage Report
       #   uses: actions/upload-artifact@v2
@@ -51,9 +52,6 @@ jobs:
         uses: paambaati/codeclimate-action@v2.7.5
         env:
           CC_TEST_REPORTER_ID: ${{secrets.CC_TEST_REPORTER_ID}}
-        with:
-          coverageCommand: slather coverage --html --scheme "${{ matrix.scheme }}" ${{env.working-directory}}/tealium-swift.xcodeproj
-          coverageLocations: "${{ matrix.scheme }}".html:html
 
 
       ### The following will upload the code coverage reports to Codecov.io if we can get approval for it ###

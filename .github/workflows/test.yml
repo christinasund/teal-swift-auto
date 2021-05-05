@@ -11,9 +11,9 @@ jobs:
       - uses: ruby/setup-ruby@v1
         with:
           ruby-version: '2.7'
-      - name: Install Slather
+      - name: Install fastlane
         run: |
-          gem install slather   
+          gem install fastlane   
   test_iOS:
     needs: install 
     name: iOS Tests

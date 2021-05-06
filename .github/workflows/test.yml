@@ -4,7 +4,7 @@ on: [push] # [pull_request]
 
 jobs:
   install:
-    name: Setup Slather
+    name: Setup fastlane
     runs-on: macos-latest
     steps:
       - uses: actions/checkout@v2

@@ -39,7 +39,8 @@ jobs:
     steps:
       - uses: actions/checkout@v2 
       - name: Test - "${{ matrix.scheme }}"
-        run: fastlane scan --scheme "${{ matrix.scheme }}" --clean true --code_coverage true
+        run: fastlane scan --project "tealium-swift.xcodeproj" --scheme "${{ matrix.scheme }}" --clean true --code_coverage true
+        working-directory: ${{env.working-directory}}
       # - name: Prepare Code Coverage Report - "${{ matrix.scheme }}"
       #   run: fastlane slather --scheme "${{ matrix.scheme }}" --cobertura_xml true 
       #   working-directory: ${{env.working-directory}} 

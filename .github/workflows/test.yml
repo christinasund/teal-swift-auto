@@ -56,6 +56,7 @@ jobs:
         with:
           coverageCommand: cd builder/test_output && xcrun xccov view --report --json "${{ matrix.scheme }}".xcresult
           coverageLocations: ${{env.working-directory}}/test_output/"${{ matrix.scheme }}".xcresult:json
+          debug: true
 
       ### The following will upload the code coverage reports to Codecov.io if we can get approval for it ###
 

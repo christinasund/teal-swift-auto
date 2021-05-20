@@ -44,7 +44,7 @@ jobs:
         working-directory: ${{env.working-directory}}
       - name: Test working-directory
         run: bundle exec slather coverage -s --scheme "${{ matrix.scheme }}" "tealium-swift.xcodeproj" && ls
-        working-directory: ${{env.working-directory}
+        working-directory: ${{env.working-directory}}
       # - name: Prepare Code Coverage Report - "${{ matrix.scheme }}"
       #   run: fastlane slather --scheme "${{ matrix.scheme }}" --cobertura_xml true 
       #   working-directory: ${{env.working-directory}} 

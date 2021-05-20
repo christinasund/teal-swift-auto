@@ -42,7 +42,7 @@ jobs:
         run: fastlane scan --project "tealium-swift.xcodeproj" --scheme "${{ matrix.scheme }}" --clean true --code_coverage true
         working-directory: ${{env.working-directory}}
       - name: Test working-directory
-        run: cd builder/test_output && ls  
+        run: cd builder/test_output && xcrun xccov view --report --json "${{ matrix.scheme }}".xcresult && ls
       # - name: Prepare Code Coverage Report - "${{ matrix.scheme }}"
       #   run: fastlane slather --scheme "${{ matrix.scheme }}" --cobertura_xml true 
       #   working-directory: ${{env.working-directory}} 

@@ -54,7 +54,7 @@ jobs:
         env:
           CC_TEST_REPORTER_ID: ${{secrets.CC_TEST_REPORTER_ID}}
         with:
-          coverageCommand: cd builder/test_output && xcrun xccov view --report --json "${{ matrix.scheme }}".xcresult
+          coverageCommand: cd builder/test_output && xcrun xccov view --report --json "${{ matrix.scheme }}".xcresult && ls
           coverageLocations: ${{env.working-directory}}/test_output/"${{ matrix.scheme }}".xcresult:json
           debug: true
 

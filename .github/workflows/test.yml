@@ -3,20 +3,20 @@ name: Tests and Code Coverage
 on: [push] # [pull_request]
 
 jobs:
-  install:
-    name: Setup
-    runs-on: macos-latest
-    steps:
-      - uses: actions/checkout@v2
-      - uses: ruby/setup-ruby@v1
-        with:
-          ruby-version: '2.7'
-      - name: Install fastlane
-        run: gem install fastlane   
-      - name: Install slather
-        run: gem install slather            
+  # install:
+  #   name: Setup
+  #   runs-on: macos-latest
+  #   steps:
+  #     - uses: actions/checkout@v2
+  #     - uses: ruby/setup-ruby@v1
+  #       with:
+  #         ruby-version: '2.7'
+  #     - name: Install fastlane
+  #       run: gem install fastlane   
+  #     - name: Install slather
+  #       run: gem install slather            
   test_iOS:
-    needs: install 
+    #needs: install 
     name: iOS Tests
     runs-on: macos-latest
     timeout-minutes: 60
@@ -38,12 +38,19 @@ jobs:
             # - TealiumTagManagementTests-iOS
             # - TealiumVisitorServiceTests-iOS
     steps:
-      - uses: actions/checkout@v2 
+      - uses: actions/checkout@v2
+      - uses: ruby/setup-ruby@v1
+        with:
+          ruby-version: '2.7'
+      - name: Install fastlane
+        run: gem install fastlane   
+      - name: Install slather
+        run: gem install slather
       - name: Test - "${{ matrix.scheme }}"
         run: fastlane scan --project "tealium-swift.xcodeproj" --scheme "${{ matrix.scheme }}" --clean true --code_coverage true
         working-directory: ${{env.working-directory}}
       - name: Test working-directory
-        run: bundle exec slather coverage -s --scheme "${{ matrix.scheme }}" "tealium-swift.xcodeproj" && ls
+        run: slather coverage -s --scheme "${{ matrix.scheme }}" "tealium-swift.xcodeproj" && ls
         working-directory: ${{env.working-directory}}
       # - name: Prepare Code Coverage Report - "${{ matrix.scheme }}"
       #   run: fastlane slather --scheme "${{ matrix.scheme }}" --cobertura_xml true 

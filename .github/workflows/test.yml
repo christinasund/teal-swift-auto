@@ -50,14 +50,14 @@ jobs:
         run: fastlane scan --project "tealium-swift.xcodeproj" --scheme "${{ matrix.scheme }}" --clean true --code_coverage true
         working-directory: ${{env.working-directory}}
       - name: Test working-directory
-        run: slather coverage -x && cd test_output && ls
+        run: slather coverage -x --xcodeproj "${{env.working-directory}}/tealium-swift.xcodeproj" --scheme ${{ matrix.scheme }}" --output-directory test_output && ls
         working-directory: ${{env.working-directory}}
       - name: Upload Coverage to Code Climate
         uses: paambaati/codeclimate-action@v2.7.1
         env:
           CC_TEST_REPORTER_ID: ${{secrets.CC_TEST_REPORTER_ID}}
         with:
-          coverageCommand: cd ../../builder && slather coverage -x && cd test_output && ls
+          coverageCommand: slather coverage -x --xcodeproj "${{env.working-directory}}/tealium-swift.xcodeproj" --scheme ${{ matrix.scheme }}" --output-directory test_output
           coverageLocations: ${{env.working-directory}}/test_output/cobertura.xml:xml
           debug: true
 

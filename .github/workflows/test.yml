@@ -57,7 +57,7 @@ jobs:
         env:
           CC_TEST_REPORTER_ID: ${{secrets.CC_TEST_REPORTER_ID}}
         with:
-          coverageCommand: slather coverage -x --xcodeproj "${{env.working-directory}}/tealium-swift.xcodeproj" --scheme ${{ matrix.scheme }}" --output-directory test_output
+          coverageCommand: slather coverage -x --xcodeproj "${{env.working-directory}}/tealium-swift.xcodeproj" --scheme "${{ matrix.scheme }}" --output-directory test_output
           coverageLocations: ${{env.working-directory}}/test_output/cobertura.xml:xml
           debug: true
 

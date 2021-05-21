@@ -1,0 +1,4 @@
+coverage_service: cobertura_xml
+xcodeproj: tealium-swift.xcodeproj
+scheme: TealiumCollectTests-iOS
+output_directory: test_output

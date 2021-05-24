@@ -52,6 +52,24 @@ jobs:
       - name: Test working-directory
         run: slather coverage -x  --scheme "${{ matrix.scheme }}" --output-directory test_output "tealium-swift.xcodeproj" && cd test_output && ls
         working-directory: ${{env.working-directory}}
+      # - name: Upload Coverage to Code Climate
+      #   uses: paambaati/codeclimate-action@v2.7.1
+      #   env:
+      #     CC_TEST_REPORTER_ID: ${{secrets.CC_TEST_REPORTER_ID}}
+      #   with:
+      #     coverageCommand: slather coverage -x  --scheme "${{ matrix.scheme }}" --output-directory "${{env.working-directory}}/test_output" "${{env.working-directory}}/tealium-swift.xcodeproj"
+      #     coverageLocations: ${{env.working-directory}}/test_output/cobertura.xml:xml
+      #     debug: true
+  coverage:
+    needs: test_iOS 
+    name: Code Coverage
+    runs-on: ubuntu-latest
+    timeout-minutes: 60
+    steps:
+      - uses: actions/checkout@v2
+      - uses: ruby/setup-ruby@v1
+        with:
+          ruby-version: '2.7'  
       - name: Upload Coverage to Code Climate
         uses: paambaati/codeclimate-action@v2.7.1
         env:
@@ -59,8 +77,7 @@ jobs:
         with:
           coverageCommand: slather coverage -x  --scheme "${{ matrix.scheme }}" --output-directory "${{env.working-directory}}/test_output" "${{env.working-directory}}/tealium-swift.xcodeproj"
           coverageLocations: ${{env.working-directory}}/test_output/cobertura.xml:xml
-          debug: true
-
+          debug: true    
       ### The following will upload the code coverage reports to Codecov.io if we can get approval for it ###
 
       # - name: Upload to Codecov - "${{ matrix.scheme }}"
